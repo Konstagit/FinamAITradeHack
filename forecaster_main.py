@@ -423,10 +423,11 @@ def make_preds(train_path: Path, test_path: Path, df_news_path: Path, output_pat
     # Топ признаки
     feat_cols = list(features_full["feature"])
     
+    # Считаем на ГПУ для скорости
     xgb_base = XGBRegressor(
         objective="reg:absoluteerror",
-        tree_method="hist",         # CPU
-        predictor="cpu_predictor",  # CPU
+        tree_method="gpu_hist",
+        predictor="gpu_predictor",
         n_estimators=600,
         learning_rate=0.05,
         max_depth=10,
@@ -435,19 +436,6 @@ def make_preds(train_path: Path, test_path: Path, df_news_path: Path, output_pat
         n_jobs=1,
         random_state=42,
     )
-
-    # xgb_base = XGBRegressor(
-    #     objective="reg:absoluteerror",
-    #     tree_method="gpu_hist",
-    #     predictor="gpu_predictor",
-    #     n_estimators=600,
-    #     learning_rate=0.05,
-    #     max_depth=10,
-    #     subsample=0.8,
-    #     colsample_bytree=0.8,
-    #     n_jobs=1,
-    #     random_state=42,
-    # )
 
     xgb_multi = MultiOutputRegressor(xgb_base, n_jobs=1)
     xgb_multi.fit(x_train[feat_cols], y_train)
