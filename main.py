@@ -10,7 +10,7 @@ import pandas as pd
 
 # ====== Дедупликация новостей (+-1 день) ======
 print("Начинаем процесс дедупликации из другого файла...")
-os.mkdir(Path(r'data\processed'))
+os.makedirs(Path(r'data\processed'), exist_ok=True)
 # Определяем пути к данным
 INPUT_NEWS_1 = Path(r'data\raw\participants\news.csv')
 INPUT_NEWS_2 = Path(r'data\raw\participants\news_2.csv')
@@ -34,7 +34,7 @@ input_csv_path = Path(r'data\processed\deduped_full.csv')
 BATCH_SIZE        = 1000
 MAX_CONCURRENCY   = 70         # сколько запросов одновременно внутри батча
 ARTIFACTS_DIR     = Path("./artifacts")
-MODEL_NAME        = "google/gemma-3-27b-it"
+MODEL_NAME        = "google/gemma-3-12b-it"
 
 # Вызываем функцию
 run_llms_news_extraction_pipeline(input_csv_path = input_csv_path,
